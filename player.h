@@ -4,9 +4,9 @@
 #include <algorithm>
 #pragma once
 class Player{
-    int myArea[10][10],  // расположение моих кораблей
-        shootArea[10][10], // -1 - miss, 1 - hit  // моя стрельба по кораблям противника
-        woundArea[10][10]; // -1 - miss, 1 - hit to ship // стрельба противника по моим кораблям
+    int myArea[10][10],  // the position of my ships
+        shootArea[10][10], // -1 - miss, 1 - hit  // my shooting enemy ships
+        woundArea[10][10]; // -1 - miss, 1 - hit to ship // shooting the enemy on my ships
     int X, Y, prevX, prevY;
     bool lastMove;
     int ships;

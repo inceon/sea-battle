@@ -47,7 +47,6 @@ bool Player::gameOver(){
     for(int i=0;i<10;i++)
         for(int j=0;j<10;j++)
             if(shootArea[i][j]==0) return false;
-    //for(int i=0;i<4;i++) if(ships[i] > 0) return false;
     return true;
 }
 void Player::genNew(){
@@ -72,7 +71,6 @@ void Player::genNew(){
     }
 }
 std::pair<int, int> Player::shoot(){
-    // lastMove - последний выстрел удачный?
     srand(static_cast<unsigned>(time(NULL)));
 
     if(lastMove){
@@ -189,38 +187,4 @@ void Player::writeShoot(int b){
         lastMove = false;
     }
 }
-/*
-bool Player::state1(int x, int y){
-    bool b;
-    do{
-        do{
-            x = rand() % 10;
-            y = rand() % 10;
-        }while(Freedom(x, y, shootArea));
-        Pkx = rand() % 2;
-        Pky = Pkx - 1;
-        for(int m=1;m<=2;m++){
-            int i = 0, k = 0;
-            for(int n=1;n<=2;n++){
-                while(Freedom(x + Pkx * i, y + Pky * i, shootArea)){
-                    k++; i++;
-                }
-                Pkx = -Pkx;
-                Pky = -Pky;
-                i = 1;
-            }
-            b = k >= maxShip();
-            if(b) break;
-            std::swap(Pkx, Pky);
-        }
-    }while(b);
-    bool res = checkCell(x, y, two);
-    if(res){
-        Px = x;
-        Py = y;
-        Len = 1;
-        if(maxShip()>1) state = 2;
-        else ships[len]--;
-    }
-}
-*/
+
