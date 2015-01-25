@@ -96,7 +96,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         xPos = LOWORD(lParam)/cellSize;
         yPos = HIWORD(lParam)/cellSize-1;
         mas.push_back(std::make_pair(xPos, yPos));
-        //MessageBox(hwnd, to_string(yPos).c_str(), to_string(xPos).c_str(),  MB_ICONWARNING);
         break;
 
     case WM_KEYDOWN:
@@ -126,17 +125,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (wParam)
         {
             case 2:
-                //MessageBeep(0x00000040L);
-                /* Test multithreading and asynchrony */
-                /*
-                fut = std::async([&](){
-                        if(!game.playerMove()){
-                            KillTimer(hwnd, TimerId);
-                            return true;
-                        }else return false;
-                        });
-                fut.get();
-                */
                 if(!game.playerMove()) KillTimer(hwnd, TimerId);
                 break;
             case 1:
@@ -167,10 +155,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
                     }
 
-                /*              Ходы пользователя                */
-                for(auto i=mas.begin(); i!=mas.end(); i++)
-                    drawCell(memDC, (*i).first, (*i).second, 0);
-                /*************************************************/
 
                 BitBlt(hDC, 0, 0, width, height, memDC, 0, 0, SRCCOPY);
                 SelectObject(memDC, oldBtm);
@@ -189,7 +173,6 @@ void drawText(HDC hDC, string str, int x, int y) {
     SetBkMode(hDC, TRANSPARENT);
     TextOut(hDC, x, y, str.c_str(), static_cast<int>(str.length()));
 }
-//void drawShip(HDC hDC, )
 void drawCell(HDC hDC, int x, int y, int k) {
     HBRUSH hBrush = CreateSolidBrush(clBackgroundColor);
     HPEN hPen = CreatePen(PS_SOLID, 3, clBoxLineColor);
