@@ -11,6 +11,7 @@ bool Player::Freedom(const int x, const int y, int area[10][10]){
     }else return false;
 }
 Player::Player():X(0),Y(0),lastMove(false), ships(0){
+    counter = 0;
     srand(static_cast<unsigned>(time(NULL)));
     for(int i=0;i<10;i++)
         for(int j=0;j<10;j++)
@@ -72,7 +73,7 @@ void Player::genNew(){
 }
 std::pair<int, int> Player::shoot(){
     srand(static_cast<unsigned>(time(NULL)));
-
+    counter++;
     if(lastMove){
         if(prevX==-1 && prevY==-1){
             int pos[4] = {0, 0, 0, 0}; // x-left, x-right, y-top, y-bottom
@@ -93,7 +94,79 @@ std::pair<int, int> Player::shoot(){
             }while(shootArea[X][Y]!=0);
             return std::make_pair(X, Y);
         }else{
-
+            if(prevX==X){
+                if(prevY<Y){
+                    if(Y+1>=10){
+                        Y = prevY-1;
+                        if(shootArea[X][Y]==-1){
+                            for(int &i=Y;i<10;i++) if(shootArea[X][Y]==0) break;
+                            prevY = Y-1;
+                        }
+                        return std::make_pair(X, Y);
+                    }else{
+                        prevY = Y;
+                        Y++;
+                        if(shootArea[X][Y]==-1){
+                            for(int &i=Y;i>=0;i--) if(shootArea[X][Y]==0) break;
+                            prevY = Y+1;
+                        }
+                        return std::make_pair(X, Y);
+                    }
+                }else{
+                    if(Y-1<0){
+                        Y = prevY+1;
+                        if(shootArea[X][Y]==-1){
+                            for(int &i=Y;i>=0;i--) if(shootArea[X][Y]==0) break;
+                            prevY = Y-1;
+                        }
+                        return std::make_pair(X, Y);
+                    }else{
+                        prevY = Y;
+                        Y--;
+                        if(shootArea[X][Y]==-1){
+                            for(int &i=Y;i>=0;i++) if(shootArea[X][Y]==0) break;
+                            prevY = Y+1;
+                        }
+                        return std::make_pair(X, Y);
+                    }
+                }
+            }else{
+                if(prevX<X){
+                    if(X+1>=10){
+                        X = prevX-1;
+                        if(shootArea[X][Y]==-1){
+                            for(int &i=X;i<10;i++) if(shootArea[X][Y]==0) break;
+                            prevX = X-1;
+                        }
+                        return std::make_pair(X, Y);
+                    }else{
+                        prevX = X;
+                        X++;
+                        if(shootArea[X][Y]==-1){
+                            for(int &i=X;i>=0;i--) if(shootArea[X][Y]==0) break;
+                            prevX = X-1;
+                        }
+                        return std::make_pair(X, Y);
+                    }
+                }else{
+                    if(X-1<0){
+                        X = prevX+1;
+                        if(shootArea[X][Y]==-1){
+                            for(int &i=X;i>=0;i--) if(shootArea[X][Y]==0) break;
+                            prevX = X-1;
+                        }
+                        return std::make_pair(X, Y);
+                    }else{
+                        prevX = X;
+                        X--;
+                        if(shootArea[X][Y]==-1){
+                            for(int &i=X;i<10;i++) if(shootArea[X][Y]==0) break;
+                            prevX = X-1;
+                        }
+                        return std::make_pair(X, Y);
+                    }
+                }
+            }
         }
     }else{
         prevX = -1; prevY = -1;
@@ -187,4 +260,3 @@ void Player::writeShoot(int b){
         lastMove = false;
     }
 }
-
