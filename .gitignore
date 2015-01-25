@@ -1,0 +1,9 @@
+# Code::Blocks
+*.depend
+*.layout
+*.cbp
+bin
+obj
+
+# CppCheck
+CppCheckResults.xml
