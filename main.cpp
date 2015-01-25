@@ -116,7 +116,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_CREATE:
         SetTimer(hwnd, 1, 100, NULL);
-        TimerId = SetTimer(hwnd, 2, 10, NULL);
+        TimerId = SetTimer(hwnd, 2, 1, NULL);
         one.genNew();
         Sleep(1000);
         two.genNew();
@@ -125,6 +125,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (wParam)
         {
             case 2:
+                /* Test multithreading and asynchrony */
+                /*
+                fut = std::async([&](){
+                        if(!game.playerMove()){
+                            KillTimer(hwnd, TimerId);
+                            return true;
+                        }else return false;
+                        });
+                fut.get();
+                */
                 if(!game.playerMove()) KillTimer(hwnd, TimerId);
                 break;
             case 1:
@@ -154,7 +164,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                         else if(two.getWoundCell(i, j)==1) drawCross(memDC, i+1, j+1, 4);
 
                     }
-
+                drawText(memDC, to_string(one.counter), xCell/2*cellSize, 2);
+                drawText(memDC, to_string(two.counter), xCell/2*cellSize, 13*cellSize);
+                /*              Ходы пользователя                */
+                for(auto i=mas.begin(); i!=mas.end(); i++)
+                    drawCell(memDC, (*i).first, (*i).second, 0);
+                /*************************************************/
 
                 BitBlt(hDC, 0, 0, width, height, memDC, 0, 0, SRCCOPY);
                 SelectObject(memDC, oldBtm);

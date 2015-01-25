@@ -12,6 +12,7 @@ class Player{
     int ships;
     bool Freedom(const int, const int, int [10][10]);
 public:
+    int counter;
     bool checkCell(int, int);
     int getShootCell(int, int);
     int getWoundCell(int, int);
