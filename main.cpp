@@ -19,6 +19,8 @@ int xCell = 25;
 int yCell = 28;
 int width = xCell*cellSize;
 int height = yCell*cellSize;
+int speed = 1;
+bool multithreading = true;
 
 Player one, two;
 Game game(one, two);
@@ -61,6 +63,17 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR cmdParam, int cmd
                           NULL,                  /* no menu */
                           hInst,                 /* Program Instance handler */
                           NULL);                 /* No Window Creation data */
+
+
+    HMENU hmenu1;
+    hmenu1 = CreateMenu();
+
+    AppendMenu(hmenu1, MF_STRING, 0, "&File");
+    AppendMenu(hmenu1, MF_STRING, 1, "&Edit");
+    AppendMenu(hmenu1, MF_STRING, 2, "&Help");
+    ModifyMenu(hmenu1, 2, MF_GRAYED, 2, MF_STRING);
+
+    SetMenu(hWnd, hmenu1);
 
     ShowWindow(hWnd, SW_SHOW);
     UpdateWindow(hWnd);
@@ -107,7 +120,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             one = Player(); two = Player();
             Sleep(1000);
             one.genNew();
-            TimerId = SetTimer(hwnd, 2, 1, NULL);
+            TimerId = SetTimer(hwnd, 2, speed, NULL);
             break;
         }
         break;
@@ -116,7 +129,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_CREATE:
         SetTimer(hwnd, 1, 100, NULL);
-        TimerId = SetTimer(hwnd, 2, 1, NULL);
+        TimerId = SetTimer(hwnd, 2, speed, NULL);
         one.genNew();
         Sleep(1000);
         two.genNew();
@@ -126,16 +139,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             case 2:
                 /* Test multithreading and asynchrony */
-                /*
-                fut = std::async([&](){
-                        if(!game.playerMove()){
-                            KillTimer(hwnd, TimerId);
-                            return true;
-                        }else return false;
-                        });
-                fut.get();
-                */
-                if(!game.playerMove()) KillTimer(hwnd, TimerId);
+                if(multithreading){
+                    fut = std::async([&](){
+                            if(!game.playerMove()){
+                                KillTimer(hwnd, TimerId);
+                                return true;
+                            }else return false;
+                            });
+                    fut.get();
+                }else
+                    if(!game.playerMove()) KillTimer(hwnd, TimerId);
                 break;
             case 1:
                 hDC = GetDC(hwnd);
@@ -166,11 +179,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                     }
                 drawText(memDC, to_string(one.counter), xCell/2*cellSize, 2);
                 drawText(memDC, to_string(two.counter), xCell/2*cellSize, 13*cellSize);
-                /*              Ходы пользователя                */
-                for(auto i=mas.begin(); i!=mas.end(); i++)
-                    drawCell(memDC, (*i).first, (*i).second, 0);
-                /*************************************************/
-
+                
                 BitBlt(hDC, 0, 0, width, height, memDC, 0, 0, SRCCOPY);
                 SelectObject(memDC, oldBtm);
                 DeleteObject(hScreen);

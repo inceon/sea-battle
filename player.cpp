@@ -230,6 +230,10 @@ void Player::writeShoot(int b){
     /* -1 - miss, 1 - hit, 2 - kill */
     if(b==1){
         shootArea[X][Y] = 1;
+        if(X+1<10 && Y+1<10) shootArea[X+1][Y+1]=-1;
+        if(X+1<10 && Y-1>=0) shootArea[X+1][Y-1]=-1;
+        if(X-1>=0 && Y+1<10) shootArea[X-1][Y+1]=-1;
+        if(X-1>=0 && Y-1>=0) shootArea[X-1][Y-1]=-1;
         lastMove = true;
     }else if(b==2){
         shootArea[X][Y] = 1;
